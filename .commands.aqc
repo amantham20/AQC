@@ -1,0 +1,11 @@
+docker build -t name
+- Docker Build: Build a Docker image tagged as "name"
+---
+pytest
+- Run Tests: Execute the test suite using pytest
+---
+ls
+- List Files: List files in the current directory
+---
+echo "Hello, World!"
+- Echo: Print a message to the console
