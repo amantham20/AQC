@@ -9,3 +9,10 @@ ls
 ---
 echo "Hello, World!"
 - Echo: Print a message to the console
+---
+go build -o aqc .
+- Go Build: Compile the AQC application
+---
+ls -lrt
+- files in order: gets all of the files in order
+---
