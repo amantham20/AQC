@@ -8,6 +8,8 @@
 
 version: 2
 
+project_name: aqc
+
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -27,7 +29,7 @@ archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
-      AQC_
+      {{ .ProjectName }}_
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
