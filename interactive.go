@@ -11,8 +11,13 @@ import (
 // At the top of interactive.go, add a global variable for the debug log file.
 var debugFile *os.File
 
+func InteractiveModeWithDefault() {
+	InteractiveMode(-1)
+}
+
 // In InteractiveMode, open the debug log file.
-func InteractiveMode() {
+func InteractiveMode(index int) {
+
 	// Open (or create) the debug log file.
 	var err error
 	debugFile, err = os.OpenFile("debug.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)

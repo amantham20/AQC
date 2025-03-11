@@ -4,16 +4,23 @@ import (
 	// "flag"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func main() {
 	// If no subcommand is provided, use interactive mode.
 	if len(os.Args) < 2 {
-		InteractiveMode()
+		InteractiveModeWithDefault()
 		return
 	}
 
 	// Switch based on the provided subcommand.
+	// Check if first argument is a number
+	if num, err := strconv.Atoi(os.Args[1]); err == nil {
+		InteractiveMode(num)
+		return
+	}
+
 	switch os.Args[1] {
 	case "add":
 		AddSubcommand()
@@ -21,12 +28,13 @@ func main() {
 		ListSubcommand()
 	case "help", "--help", "-h":
 		PrintHelp()
-
 	case "version", "--version", "-v":
 		version()
 	default:
 		// Fallback to interactive mode for unknown arguments.
-		InteractiveMode()
+		fmt.Println("Unknown subcommand.")
+		PrintHelp()
+
 	}
 }
 

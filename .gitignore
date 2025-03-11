@@ -1,0 +1,5 @@
+/build
+
+aqc
+# Added by goreleaser init:
+dist/
