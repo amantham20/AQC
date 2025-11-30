@@ -50,5 +50,113 @@ jobs:
             build/aqc-windows-amd64.exe
             build/checksums.txt
           generate_release_notes: true
+          body: |
+            ## Installation Instructions
+
+            ### 🐧 Linux
+
+            #### Quick Install (All Distros)
+            ```bash
+            # AMD64 (Intel/AMD 64-bit)
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-linux-amd64 -o aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+
+            # ARM64 (Raspberry Pi 4, AWS Graviton, etc.)
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-linux-arm64 -o aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+            ```
+
+            #### Ubuntu/Debian
+            ```bash
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-linux-amd64 -o aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+            ```
+
+            #### Fedora/RHEL/CentOS
+            ```bash
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-linux-amd64 -o aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+            ```
+
+            #### Arch Linux
+            ```bash
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-linux-amd64 -o aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+            ```
+
+            #### Alpine Linux
+            ```bash
+            wget https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-linux-amd64 -O aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+            ```
+
+            ---
+
+            ### 🍎 macOS
+
+            #### Intel Mac (x86_64)
+            ```bash
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-darwin-amd64 -o aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+            ```
+
+            #### Apple Silicon (M1/M2/M3)
+            ```bash
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-darwin-arm64 -o aqc
+            chmod +x aqc
+            sudo mv aqc /usr/local/bin/
+            ```
+
+            #### Using Homebrew (manual)
+            ```bash
+            # Download and install manually
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-darwin-arm64 -o /usr/local/bin/aqc
+            chmod +x /usr/local/bin/aqc
+            ```
+
+            ---
+
+            ### 🪟 Windows
+
+            #### PowerShell
+            ```powershell
+            # Download the executable
+            Invoke-WebRequest -Uri "https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-windows-amd64.exe" -OutFile "aqc.exe"
+
+            # Move to a directory in your PATH (e.g., C:\Windows or create custom dir)
+            Move-Item aqc.exe C:\Windows\aqc.exe
+            ```
+
+            #### Command Prompt
+            ```cmd
+            # Download using curl (Windows 10+)
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/aqc-windows-amd64.exe -o aqc.exe
+
+            # Move to a directory in your PATH
+            move aqc.exe C:\Windows\aqc.exe
+            ```
+
+            ---
+
+            ### ✅ Verify Installation
+            ```bash
+            aqc --help
+            ```
+
+            ### 🔐 Verify Checksum (Optional)
+            ```bash
+            # Download checksums file
+            curl -L https://github.com/amantham20/AQC/releases/download/${{ github.ref_name }}/checksums.txt -o checksums.txt
+
+            # Verify (Linux/macOS)
+            sha256sum -c checksums.txt --ignore-missing
+            ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
