@@ -7,6 +7,9 @@ import (
 	"strconv"
 )
 
+// Version is set at build time via ldflags
+var Version = "dev"
+
 func main() {
 	// If no subcommand is provided, use interactive mode.
 	if len(os.Args) < 2 {
@@ -39,7 +42,7 @@ func main() {
 }
 
 func version() {
-	fmt.Println("AQC - Aman's Quick Command Tool v0.1")
+	fmt.Printf("AQC - Aman's Quick Command Tool %s\n", Version)
 
 	out := `
             __

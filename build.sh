@@ -4,6 +4,8 @@ platforms=("linux/amd64" "linux/arm64" "darwin/amd64" "darwin/arm64" "windows/am
 
 mkdir -p build
 
+# Get version from git tag or use "dev"
+VERSION=$(git describe --tags --always 2>/dev/null || echo "dev")
 
 for platform in "${platforms[@]}"
 do
@@ -12,6 +14,6 @@ do
     if [ "$GOOS" = "windows" ]; then
         output_name+='.exe'
     fi
-    env GOOS=$GOOS GOARCH=$GOARCH go build -o build/$output_name .
+    env GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "-X main.Version=${VERSION}" -o build/$output_name .
     echo "Built: $output_name"
 done
