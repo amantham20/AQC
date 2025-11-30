@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Build binaries
+        run: |
+          mkdir -p build
+          platforms=("linux/amd64" "linux/arm64" "darwin/amd64" "darwin/arm64" "windows/amd64")
+          for platform in "${platforms[@]}"; do
+            IFS="/" read -r GOOS GOARCH <<< "$platform"
+            output_name="aqc-${GOOS}-${GOARCH}"
+            if [ "$GOOS" = "windows" ]; then
+              output_name+='.exe'
+            fi
+            env GOOS=$GOOS GOARCH=$GOARCH go build -o build/$output_name .
+            echo "Built: $output_name"
+          done
+
+      - name: Create checksums
+        run: |
+          cd build
+          sha256sum * > checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/aqc-linux-amd64
+            build/aqc-linux-arm64
+            build/aqc-darwin-amd64
+            build/aqc-darwin-arm64
+            build/aqc-windows-amd64.exe
+            build/checksums.txt
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
