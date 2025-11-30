@@ -1,6 +1,26 @@
+# Build artifacts
 /build
-
-aqc
-# Added by goreleaser init:
 dist/
+
+# Binary
+aqc
+aqc.exe
+aqc-test
+
+# User command file (each user has their own)
+.commands.aqc
+
+# Debug logs
+debug.log
+
+# Environment
 .env
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
