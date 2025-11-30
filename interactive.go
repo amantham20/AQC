@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 
@@ -38,50 +37,33 @@ func InteractiveMode(index int) {
 
 	// Enter alternate screen mode so the application takes over the terminal.
 	EnterAlternateScreen()
-	defer ExitAlternateScreen()
 
 	// Initialize terminal for raw mode to capture individual keystrokes
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
 	if err != nil {
 		fmt.Fprintf(debugFile, "Error setting up terminal in raw mode: %v\n", err)
+		ExitAlternateScreen() // Exit alternate screen if there's an error
 		fmt.Printf("%sError setting up terminal: %v%s\n", ColorRed, err, ColorReset)
 		os.Exit(1)
 	}
-	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
 	// Display the menu with scrolling
 	selectedIndex := displayScrollableMenu(commands)
 
-	// Exit if no valid selection
+	// Restore terminal and exit alternate screen before returning
+	term.Restore(int(os.Stdin.Fd()), oldState)
+	ExitAlternateScreen()
+
 	if selectedIndex < 0 || selectedIndex >= len(commands) {
 		return
 	}
 
-	// Get selected command
 	selected := commands[selectedIndex]
 
-	// Clear the screen to display the command details
-	// ClearScreen()
-	// PrintHeader()
-
-	printLine(ColorCyan + "Shell Command:" + ColorReset)
-	printLine(ColorWhite + selected.Cmd + ColorReset)
-	printLine("")
-	printLine(ColorGreen + "Command Name:" + ColorReset + " " + selected.Name)
-	printLine(ColorYellow + "Description:" + ColorReset + " " + selected.Description)
-
-	// Restore terminal to normal mode for command execution
-	term.Restore(int(os.Stdin.Fd()), oldState)
-
-	fmt.Println("\nPress ENTER to execute the command...")
-	bufio.NewReader(os.Stdin).ReadString('\n')
-
-	fmt.Println(ColorCyan + "\nExecuting...\n" + ColorReset)
+	fmt.Println(ColorCyan + "Executing:" + ColorReset + " " + selected.Cmd + "\n")
 	RunCommand(selected.Cmd)
-
 }
 
-// Update getTerminalHeight to log to the debug file.
 func getTerminalHeight() int {
 	_, height, err := term.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
@@ -180,7 +162,7 @@ func displayScrollableMenu(commands []Command) int {
 		}
 
 		// Show help text
-		line := ColorYellow + "Navigate: ↑/↓ arrows | Select: Enter | Quit: q/Esc" + ColorReset
+		line := ColorYellow + "Navigate: ↑/↓ arrows | Select: Enter or 1-9 | Quit: q/Esc" + ColorReset
 		printLine(line)
 
 		// Read a single key
@@ -197,6 +179,11 @@ func displayScrollableMenu(commands []Command) int {
 				return -1
 			case 13: // Enter
 				return currentPos
+			case '1', '2', '3', '4', '5', '6', '7', '8', '9': // Number keys 1-9
+				num := int(b[0] - '0')
+				if num > 0 && num <= len(commands) {
+					return num - 1 // Return the index of the selected command
+				}
 			}
 		} else if n >= 3 {
 			// Arrow keys send escape sequences

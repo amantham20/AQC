@@ -97,7 +97,6 @@ func RunCommand(command string) {
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("%sError executing command: %v%s\n", ColorRed, err, ColorReset)
 	}
-	fmt.Printf("Here is me pringint something")
 }
 
 // AppendCommand appends a new command block to the commands file.

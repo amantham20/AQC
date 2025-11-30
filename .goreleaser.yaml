@@ -1,20 +1,10 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-
-# The lines below are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/need to use them.
-# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
-
 version: 2
 
 project_name: aqc
 
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
-    # you may remove this if you don't need go generate
     - go generate ./...
 
 builds:
@@ -24,18 +14,15 @@ builds:
       - linux
       - windows
       - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - "-X main.version={{.Version}}"
 
 archives:
   - format: tar.gz
-    # this name template makes the OS and Arch compatible with the results of `uname`.
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
-    # use zip for windows archives
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
     format_overrides:
       - goos: windows
         format: zip
@@ -48,8 +35,47 @@ changelog:
       - "^test:"
 
 release:
+  github:
+    owner: amantham20
   footer: >-
 
     ---
 
     Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
+
+brews:
+  - repository:
+      owner: amantham20
+      name: homebrew-aqc
+    description: "AQC - A powerful CLI tool for data processing"
+    homepage: "https://github.com/amantham20/aqc"
+    test: ./aqc --version
+
+snapcrafts:
+  - name: aqc
+    summary: "AQC CLI"
+    description: "A powerful CLI for data processing"
+    base: core22
+    grade: stable
+    confinement: strict
+
+chocolateys:
+  - name: aqc
+    description: "AQC - A powerful CLI for data processing"
+    authors: ["Amantham20"]
+    title: "AQC"
+
+nfpms:
+  - package_name: aqc
+    homepage: "https://github.com/amantham20/aqc"
+    description: "A powerful CLI tool written in Go for data processing"
+    maintainer: "Aman Dhruva Thamminana <thammina@msu.edu>"
+    license: MIT
+    formats:
+      - deb
+      - rpm
+
+dockers:
+  - image_templates:
+      - "ghcr.io/amantham20/aqc:{{ .Version }}"
+    dockerfile: Dockerfile
